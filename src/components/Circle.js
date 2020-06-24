@@ -1,8 +1,8 @@
 import React from 'react';
 import { distance, closestTo } from '../geometry';
 
-const canvasWidth = window.innerWidth;
-const canvasHeight = window.innerHeight;
+const canvasWidth = Math.floor(window.innerWidth * 0.95);
+const canvasHeight = Math.floor(window.innerHeight * 0.95);
 const canvasCenter = { x: canvasWidth / 2, y: canvasHeight / 2 };
 const largeCircleRadius = 200;
 const smallCircleRadius = 20;
