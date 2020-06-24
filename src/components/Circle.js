@@ -1,5 +1,5 @@
 import React from 'react';
-import { distance, closestTo } from '../geometry';
+import { rotate, multiply, gravity } from '../geometry';
 
 const canvasWidth = Math.floor(window.innerWidth * 0.95);
 const canvasHeight = Math.floor(window.innerHeight * 0.95);
@@ -12,6 +12,12 @@ class Circle extends React.Component {
     constructor(props) {
         super(props);
         this.canvas = React.createRef();
+        this.state = {
+            position: {
+                x: canvasCenter.x + permittedRadius,
+                y: canvasCenter.y
+            }
+        };
     }
 
     get ctx() {
@@ -36,13 +42,14 @@ class Circle extends React.Component {
     }
 
     drawSmallCircle = (x, y) => {
-        let position = distance({ x, y }, canvasCenter) < permittedRadius ?
-            {x, y} : closestTo(x, y, { ...canvasCenter, radius: permittedRadius });
-
+        let angle = gravity({x, y}, this.state.position) *
+                        (multiply({x, y}, this.state.position, canvasCenter) < 0 ? -1 : 1);
+        let position = rotate(this.state.position, angle, canvasCenter);
         this.ctx.beginPath();
         this.ctx.arc(position.x, position.y, smallCircleRadius, 0, 2 * Math.PI, true);
         this.ctx.fill();
         this.ctx.closePath();
+        this.setState({ position });
     }
 
     handleMouseMove = (e) => {
